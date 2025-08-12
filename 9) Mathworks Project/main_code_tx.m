@@ -5,21 +5,21 @@ clc;
 clear all;
 close all;
 
-% Fractional number to Binary - Example usage
-fraction = -10.625; % Example negative fractional number
-disp(['Input decimal fraction: ', num2str(fraction)]);
-binaryRepresentation = fractionalToFixedPointBinary(fraction);
-disp(['Converted binary representation: ', binaryRepresentation]);
-
-% Binary number to original fractional number - Example usage
-binaryInput = binaryRepresentation; % Example binary input
-decimalOutput = fixedPointBinaryToFraction(binaryInput);
-disp(['Reconstructed decimal fraction value: ', num2str(decimalOutput)]);
+% % Fractional number to Binary - Example usage
+% fraction = -10.625; % Example negative fractional number
+% disp(['Input decimal fraction: ', num2str(fraction)]);
+% binaryRepresentation = fractionalToFixedPointBinary(fraction);
+% disp(['Converted binary representation: ', binaryRepresentation]);
+% 
+% % Binary number to original fractional number - Example usage
+% binaryInput = binaryRepresentation; % Example binary input
+% decimalOutput = fixedPointBinaryToFraction(binaryInput);
+% disp(['Reconstructed decimal fraction value: ', num2str(decimalOutput)]);
 
 % Example usage
 binaryInput = [0 0 0 1 1 1 1 0]'; % Example binary input
 carrierFrequency = 1000; % Carrier frequency in Hz
-sampleRate = 8000; % Sample rate in Hz
+sampleRate = 4000; % Sample rate in Hz
 qpskModulation(binaryInput, carrierFrequency, sampleRate);
 
 
@@ -121,7 +121,7 @@ function decimalValue = fixedPointBinaryToFraction(binaryStr)
 end
 
 %% ----- QPSK Modulation ----------------------------------------------- %%
-% (Here the modualtion of bits to corresponding complex waveforms is done)
+%        (Modualtion of bits to complex waveforms)
 % ----------------------------------------------------------------------- %
 
 function qpskModulation(binaryData, carrierFreq, sampleRate)
