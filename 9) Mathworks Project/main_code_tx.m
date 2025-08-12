@@ -16,11 +16,22 @@ binaryInput = binaryRepresentation; % Example binary input
 decimalOutput = fixedPointBinaryToFraction(binaryInput);
 disp(['Reconstructed decimal fraction value: ', num2str(decimalOutput)]);
 
+% Example usage
+binaryInput = [0 0 0 1 1 1 1 0]'; % Example binary input
+carrierFrequency = 1000; % Carrier frequency in Hz
+sampleRate = 8000; % Sample rate in Hz
+qpskModulation(binaryInput, carrierFrequency, sampleRate);
+
+
+%% ---- Fractional decimal number to binary conversion ----------------- %% 
+%       (16 bit Fixed point number)  
+% ----------------------------------------------------------------------- %
+
 function binaryStr = fractionalToFixedPointBinary(fraction)
     % Define fixed-point parameters
-    totalBits = 16;  % Total bits
-    signBits = 1;    % Sign bit
-    integerBits = 9; % Integer bits
+    totalBits = 16;     % Total bits
+    signBits = 1;       % Sign bit
+    integerBits = 9;    % Integer bits
     fractionalBits = 6; % Fractional bits
 
     % Determine if the number is negative
@@ -73,6 +84,11 @@ function binaryStr = fractionalToFixedPointBinary(fraction)
     end
 end
 
+
+%% ---- Binary to Fractional decimal conversion ------------------------ %%
+%       (Convert the input to binary representation)
+% ----------------------------------------------------------------------- %
+
 function decimalValue = fixedPointBinaryToFraction(binaryStr)
     % Validate input
     if length(binaryStr) ~= 16
@@ -104,7 +120,60 @@ function decimalValue = fixedPointBinaryToFraction(binaryStr)
     end
 end
 
+%% ----- QPSK Modulation ----------------------------------------------- %%
+% (Here the modualtion of bits to corresponding complex waveforms is done)
+% ----------------------------------------------------------------------- %
 
+function qpskModulation(binaryData, carrierFreq, sampleRate)
+    % Ensure binaryData is a row vector
+    if iscolumn(binaryData)
+        binaryData = binaryData';
+    end
 
+    % Step 1: Convert binary data to symbols (2 bits per symbol)
+    numSymbols = length(binaryData) / 2;
+    symbols = zeros(1, numSymbols);
 
+    for i = 1:numSymbols
+        bits = binaryData(2*i-1:2*i);
+        % Map bits to QPSK symbols
+        if isequal(bits, [0 0])
+            symbols(i) = 1; % Phase 0
+        elseif isequal(bits, [0 1])
+            symbols(i) = 1i; % Phase 90 degrees
+        elseif isequal(bits, [1 1])
+            symbols(i) = -1; % Phase 180 degrees
+        elseif isequal(bits, [1 0])
+            symbols(i) = -1i; % Phase 270 degrees
+        end
+    end
+
+    % Step 2: Create time vector for the carrier wave
+    t = (0:1/sampleRate:(numSymbols-1)/sampleRate);
+
+    % Step 3: Modulate the symbols onto the carrier wave
+    carrierWave = cos(2 * pi * carrierFreq * t);
+    modulatedSignal = real(symbols * exp(1i * 2 * pi * carrierFreq * t));
+
+    % Plot the results
+    figure;
+    subplot(3, 1, 1);
+    stem(binaryData, 'filled');
+    title('Input Binary Data');
+    xlabel('Bit Index');
+    ylabel('Bit Value');
+
+    subplot(3, 1, 2);
+    plot(real(symbols), imag(symbols), 'o');
+    title('QPSK Constellation Diagram');
+    xlabel('In-Phase');
+    ylabel('Quadrature');
+
+    subplot(3, 1, 3);
+    plot(t, modulatedSignal);
+    title('Modulated Signal');
+    xlabel('Time (s)');
+    ylabel('Amplitude');
+    grid on;
+end
 
