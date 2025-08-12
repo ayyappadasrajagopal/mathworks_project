@@ -100,8 +100,6 @@
 % disp(['Binary representation: ', binaryRepresentation]);
 
 
-
-
 function binaryStr = fractionalToFixedPointBinary(fraction)
     % Define fixed-point parameters
     totalBits = 16;  % Total bits
@@ -109,11 +107,11 @@ function binaryStr = fractionalToFixedPointBinary(fraction)
     integerBits = 9; % Integer bits
     fractionalBits = 6; % Fractional bits
 
-    % Check for NaN
-    if isnan(fraction)
-        binaryStr = 'NaN'; % Return 'NaN' as a string for NaN input
-        return;
-    end
+    % % Check for NaN
+    % if isnan(fraction)
+    %     binaryStr = 'NaN'; % Return 'NaN' as a string for NaN input
+    %     return;
+    % end
 
     % Determine if the number is negative
     isNegative = fraction < 0;
@@ -146,7 +144,7 @@ function binaryStr = fractionalToFixedPointBinary(fraction)
     % Add sign bit
     if isNegative
         % Convert to two's complement
-        binaryVector = [str2num(binaryStr(:))'; 0]; % Append a zero for sign bit
+        binaryVector = [str2num(binaryStr(:))',0]; % Append a zero for sign bit
         binaryVector = ~binaryVector; % Invert bits
         carry = 1; % Start with carry for adding 1
         for i = totalBits:-1:1
@@ -169,6 +167,8 @@ end
 fraction = -10.625; % Example negative fractional number
 binaryRepresentation = fractionalToFixedPointBinary(fraction);
 disp(['Binary representation: ', binaryRepresentation]);
+
+
 
 
 
