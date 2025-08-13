@@ -149,11 +149,11 @@ function qpskModulation(binaryData, carrierFreq, sampleRate)
     end
 
     % Step 2: Create time vector for the carrier wave
-    t = (0:1/sampleRate:(numSymbols-1)/sampleRate);
+t = (0:1/sampleRate:(numSymbols-1)/sampleRate)'; % Ensure t is a column vector
 
-    % Step 3: Modulate the symbols onto the carrier wave
-    carrierWave = cos(2 * pi * carrierFreq * t);
-    modulatedSignal = real(symbols * exp(1i * 2 * pi * carrierFreq * t));
+% Step 3: Modulate the symbols onto the carrier wave
+carrierWave = cos(2 * pi * carrierFreq * t);
+modulatedSignal = real(symbols(:) * exp(1i * 2 * pi * carrierFreq * t.')); % Ensure symbols is a column vector
 
     % Plot the results
     figure;
